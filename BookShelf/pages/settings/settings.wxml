@@ -1,0 +1,69 @@
+<!--setting.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+  <view class="page__hd">
+    <view hidden="{{UserisRegisted}}">
+      <view class="page__title ">首次使用时，请先设置个人信息。</view>
+      <view class="page__title red">一旦设置成功，不能再更改,请确认无误后再提交。</view>
+    </view>
+    <view hidden="{{!UserisRegisted}}">
+      <view class="page__title ">用户信息</view>      
+    </view>
+  </view>
+  <view class="page__bd">
+    <!-- //用户未注册则显示-->
+    <view class="weui-cells weui-cells_after-title" hidden="{{UserisRegisted}}">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">姓名</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" placeholder="{{username!='' ? username :'请输入你的名字'}}" bindinput='cinputname' />
+        </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">编号</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" placeholder="{{userwwid!='' ? userwwid : '请输入你的编号,例如05855'}}" bindinput='cinputwwid' />
+        </view>
+      </view>
+      <view class="page__bd page__bd_spacing">
+        <button class="weui-btn" type="primary" bindtap='getOpenID'>保存</button>
+      </view>
+    </view>
+    <!--//用户注册过则显示-->
+    <view class="weui-cells weui-cells_after-title" hidden="{{!UserisRegisted}}">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">姓名</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-label">{{verfiedname}}</view>
+        </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">编号</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-label">{{verfiedwwid}}</view>
+        </view>
+      </view>
+       <view class="page__bd page__bd_spacing">
+        <button class="weui-btn" type="primary" bindtap='checkUserReg'>刷新</button>
+      </view>
+    </view>
+
+
+    <view style='margin-top:40rpx'>----------</view>
+    <view class="page__hd">
+      <view class="page__title">其他设置</view>
+    </view>
+    <view class="page__bd page__bd_spacing" >
+      <button class="weui-btn" type="warn" bindtap='delBook'hidden="{{!UserisRegisted}}">删除书籍</button>
+    </view>
+  </view>
+</view>

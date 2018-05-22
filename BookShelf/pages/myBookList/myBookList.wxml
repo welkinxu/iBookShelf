@@ -1,0 +1,126 @@
+<!--myBookList.wxml-->
+
+<template name="bookList">
+  <view class="item">
+    <view class="meta">
+      <text class="title">{{item.name}}</text>      
+    </view>
+    <view class="meta">
+      <text class="sub-title">作者：{{item.author}}</text>
+      <text class="sub-title">ID： {{item.ID}}</text>
+    </view>
+    <view class="meta">
+      <view>
+        <text wx:if="{{item.isRent==1 & item.needReturnConfirm!=1}}" class="BeRent">已借出：{{item.whoBorrow}} {{item.rentDate}}</text>
+        <text wx:elif="{{item.needReturnConfirm==1}}" class="BeRent">{{item.whoBorrow}}: {{item.whoBorrowid}} 希望归还此书</text>
+        <text wx:elif="{{item.isRent==0 & item.needRentConfirm==0}}" class="sub-title">未借出</text>
+        <text wx:elif="{{ item.needRentConfirm==1}}" class="BeRent">{{item.whoBorrow}}: {{item.whoBorrowid}} 希望借用此书</text>
+        <text wx:else class="sub-title">状态未知</text>
+      </view>
+      <view>
+        <button wx:if="{{item.needReturnConfirm==1}}" class="weui-btn mini-btn" type="warn" size="mini" bindtap='comfirmReturn' data-id='{{item.ID}}' data-bkname='{{item.name}}'> 归还确认</button>
+        <view wx:if="{{item.needRentConfirm==1}}">
+          <button class="weui-btn mini-btn" type="warn" size="mini" bindtap='allowRent' data-allowRent='false' data-id='{{item.ID}}' data-bkname='{{item.name}}'>拒绝</button>
+          <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='allowRent' data-allowRent='true' data-id='{{item.ID}}' data-bkname='{{item.name}}'>同意</button>
+        </view>
+
+      </view>
+
+    </view>
+  </view>
+</template>
+
+<template name="bookList-forBorrow">
+  <view class="item">
+    <view class="meta">
+      <text class="title">{{item.name}}</text>      
+    </view>
+    <view class="meta">
+      <text class="sub-title">作者：{{item.author}}</text>
+      <text class="sub-title">ID： {{item.ID}}</text>
+    </view>
+    <view class="meta">
+      <view>
+        <text wx:if="{{item.isRent==1 & item.needReturnConfirm!=1}}" class="BeRent">已借出：{{item.whoBorrow}} {{item.rentDate}}</text>
+        <text wx:elif="{{item.needReturnConfirm==1}}" class="BeRent">{{item.whoBorrow}}: {{item.whoBorrowid}} 希望归还此书</text>
+        <text wx:elif="{{item.isRent==0 & item.needRentConfirm==0}}" class="sub-title">未借出</text>
+        <text wx:elif="{{ item.needRentConfirm==1}}" class="BeRent">{{item.whoBorrow}}: {{item.whoBorrowid}} 希望借用此书</text>
+        <text wx:else class="sub-title">状态未知</text>
+      </view>
+      <view>
+        <button wx:if="{{item.needReturnConfirm==1}}" class="weui-btn mini-btn" type="plain" size="mini" data-id='{{item.ID}}' data-bkname='{{item.name}}'> 归还审批中</button>
+        <button wx:if="{{item.needRentConfirm==1}}" class="weui-btn mini-btn" type="plain" size="mini" data-id='{{item.ID}}' data-bkname='{{item.name}}'> 借阅审批中</button>
+        <button wx:if="{{item.isRent!=0 && item.needReturnConfirm!=1 }}" class="weui-btn mini-btn" type="primary" size="mini" bindtap='returnBK' data-id='{{item.ID}}' data-bkname='{{item.name}}'> 归还</button>
+
+      </view>
+
+    </view>
+  </view>
+</template>
+<view class='page'>
+  <text style="right:10px;color:red;font-size:10px;font-weight:bold;margin-right:10px;position: absolute;z-index:999">{{memocount==0?'':'+'}}{{memocount==0?'':memocount}}</text>
+</view>
+<view class="page">
+  <view class="page__bd">
+    <view class="weui-tab">
+      <view class="weui-navbar">
+
+        <block wx:for="{{tabs}}" wx:key="*this">
+          <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
+            <view class="weui-navbar__title">{{item}}</view>
+          </view>
+        </block>
+        <view class="weui-navbar__slider" style="width:{{sliderWidth}}px;left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+      </view>
+
+      <view class="weui-tab__panel">
+        <!--全部书籍-->
+        <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+          <button class="weui-btn" type="primary" style='display:block;font-size:28rpx' catchtap='addNewBook' hidden="{{userNoLogin}}">点击添加书籍</button>
+          <scroll-view scroll-y="true" class="page-body">
+            <template wx:for="{{BookListReturnFromServer_all}}" is="bookList" data="{{item}}" wx:key="{{item.id}}" />
+          </scroll-view>
+          <view class="sub-title" wx:if="{{!userNoLogin && BookListReturnFromServer_all.length<1}}">没有满足条件的书籍记录。</view>
+
+        </view>
+
+        <!--已借出书籍-->
+        <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+
+          <scroll-view scroll-y="true" class="page-body">
+            <template wx:for="{{BookListReturnFromServer_rent}}" is="bookList" data="{{item}}" wx:key="{{item.id}}" />
+          </scroll-view>
+           <view class="sub-title" wx:if="{{!userNoLogin && BookListReturnFromServer_rent.length<1}}">没有满足条件的书籍记录。</view>
+
+        </view>
+
+        <!--未借出书籍-->
+        <view class="weui-tab__content" hidden="{{activeIndex != 2}}">
+          <scroll-view scroll-y="true" class="page-body">
+            <template wx:for="{{BookListReturnFromServer_unrent}}" is="bookList" data="{{item}}" wx:key="{{item.id}}" />
+          </scroll-view>
+          <view class="sub-title" wx:if="{{!userNoLogin && BookListReturnFromServer_unrent.length<1}}">没有满足条件的书籍记录。</view>
+        </view>
+
+        <!--我借的书籍-->
+        <view class="weui-tab__content" hidden="{{activeIndex != 3}}">
+          <scroll-view scroll-y="true" class="page-body">
+            <template wx:for="{{BookListReturnFromServer_borrow}}" is="bookList-forBorrow" data="{{item}}" wx:key="{{item.id}}" />
+          </scroll-view>
+           <view class="sub-title" wx:if="{{!userNoLogin && BookListReturnFromServer_borrow.length<1}}">没有满足条件的书籍记录。</view>
+        </view>
+
+        <!--待办事项-->
+        <view class="weui-tab__content" hidden="{{activeIndex != 4}}">
+          <scroll-view scroll-y="true" class="page-body">
+            <template wx:for="{{BookListReturnFromServer_memo}}" is="bookList" data="{{item}}" wx:key="{{item.id}}" />
+          </scroll-view>
+          <view class="sub-title" wx:if="{{!userNoLogin && BookListReturnFromServer_memo.length<1}}">没有满足条件的书籍记录。</view>
+        </view>
+
+      </view>
+      <view class="sub-title" hidden="{{!userNoLogin}}">您未登陆无法查看，请到设置页面设置个人信息。</view>
+      
+    </view>
+  </view>
+</view>

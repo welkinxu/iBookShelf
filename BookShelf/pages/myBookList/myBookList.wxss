@@ -1,0 +1,62 @@
+/**myBookList.wxss**/
+
+.page-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx 40rpx;
+  border-bottom: 1rpx solid #eee;
+  cursor: pointer;
+}
+
+.meta {
+  text-align: justify;
+  /*display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;*/
+  display: flex;
+  /*-webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;*/
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 34rpx;
+}
+
+.sub-title {
+  font-size: 28rpx;
+  color: #c0c0c0;
+}
+
+.author {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.BeRent {
+  font-size: 28rpx;
+  color: #f74c31;
+}
+
+button{
+  height: 60rpx;
+}
+.forRent{
+  background-color:bisque;
+  font-size: 28rpx;
+  color:black;
+}
+.forConfrim{
+  background-color:greenyellow;  
+  color:black;
+}
+
+

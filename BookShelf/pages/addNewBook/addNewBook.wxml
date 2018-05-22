@@ -1,0 +1,32 @@
+<!--setting.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+  <view class="page__hd">
+    <view class="page__title">添加新的书籍</view>
+  </view>
+  <view class="page__bd">
+
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">书名</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" placeholder="请输入书籍名字"  bindinput='setNwBkName'/>
+        </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">作者</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" placeholder="请输入作者名字"  bindinput='setNwBkAuthor'/>
+        </view>
+      </view>
+    </view>
+
+    <view class="page__bd page__bd_spacing">
+      <button class="weui-btn" type="primary" bindtap='addNewBk'>添加</button>
+    </view>
+  </view>
+</view>
